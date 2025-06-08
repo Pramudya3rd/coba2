@@ -13,6 +13,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const villaRoutes = require("./routes/villaRoutes"); // Import rute villa
 const bookingRoutes = require("./routes/bookingRoutes");
+const contactRoutes = require("./routes/contactRoutes");
 
 // Impor error handler
 const errorHandler = require("./middleware/errorHandler");
@@ -23,6 +24,9 @@ app.use(cors());
 
 // --- Konfigurasi File Statis ---
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// --- Gunakan rute kontak ---
+app.use("/api/contact", contactRoutes);
 
 // --- Konfigurasi Multer untuk Bukti Pembayaran ---
 const paymentStorage = multer.diskStorage({

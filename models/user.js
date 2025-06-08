@@ -1,3 +1,4 @@
+// models/user.js
 const { DataTypes } = require("sequelize");
 const bcrypt = require("bcryptjs");
 
@@ -25,7 +26,7 @@ module.exports = (sequelize) => {
       },
       phone: {
         type: DataTypes.STRING,
-        allowNull: true, // Nomor telepon bisa opsional
+        allowNull: true,
       },
       password: {
         type: DataTypes.STRING,
@@ -33,8 +34,18 @@ module.exports = (sequelize) => {
       },
       role: {
         type: DataTypes.ENUM("user", "owner", "admin"),
-        defaultValue: "user", // Default role adalah 'user'
+        defaultValue: "user",
         allowNull: false,
+      },
+      resetPasswordToken: {
+        // Tambahkan ini
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      resetPasswordExpires: {
+        // Tambahkan ini
+        type: DataTypes.DATE,
+        allowNull: true,
       },
       createdAt: {
         type: DataTypes.DATE,
@@ -57,7 +68,6 @@ module.exports = (sequelize) => {
         },
         beforeUpdate: async (user) => {
           if (user.changed("password")) {
-            // Hanya hash jika password diubah
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(user.password, salt);
           }
@@ -66,7 +76,6 @@ module.exports = (sequelize) => {
     }
   );
 
-  // Metode instance untuk membandingkan password
   User.prototype.comparePassword = async function (candidatePassword) {
     return await bcrypt.compare(candidatePassword, this.password);
   };

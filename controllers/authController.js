@@ -1,5 +1,5 @@
 const db = require("../models");
-const User = db.User; // Ambil model User
+const User = db.User;
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -17,11 +17,9 @@ exports.register = async (req, res) => {
 
     // Validasi input dasar
     if (!name || !email || !password || !role) {
-      return res
-        .status(400)
-        .json({
-          message: "Semua field wajib diisi (Nama, Email, Password, Role).",
-        });
+      return res.status(400).json({
+        message: "Semua field wajib diisi (Nama, Email, Password, Role).",
+      });
     }
 
     // Cek apakah email sudah terdaftar
@@ -44,6 +42,7 @@ exports.register = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        phone: user.phone, // Menyertakan phone saat registrasi juga penting
       },
     });
   } catch (error) {
@@ -71,7 +70,7 @@ exports.login = async (req, res) => {
     }
 
     // Bandingkan password
-    const isMatch = await user.comparePassword(password); // Menggunakan metode instance comparePassword
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(401).json({ message: "Email atau password salah." });
     }
@@ -86,6 +85,7 @@ exports.login = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        phone: user.phone, // <--- BARIS PERBAIKAN: Sertakan nomor telepon
         role: user.role,
       },
     });
